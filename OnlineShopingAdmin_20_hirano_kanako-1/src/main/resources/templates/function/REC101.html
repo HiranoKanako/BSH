@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>購入履歴検索</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+
+	<div>
+		<form th:action="@{/search}" method="post"
+			th:object="${searchFormModel}">
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('memberNo')}" th:errors="*{memberNo}"
+					class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('priceMax')}" th:errors="*{priceMax}"
+					class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('priceMin')}" th:errors="*{priceMin}"
+					class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('positivePriceMax')}"
+					th:errors="*{positivePriceMax}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('positivePriceMin')}"
+					th:errors="*{positivePriceMin}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('priceIntegrity')}"
+					th:errors="*{priceIntegrity}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('dateIntegrity')}"
+					th:errors="*{dateIntegrity}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('startDateExist')}"
+					th:errors="*{startDateExist}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('endDateExist')}"
+					th:errors="*{endDateExist}" class="error"></span></font>
+			<p th:if="${MSG013} != null">
+				<font color="red"><span th:text="${MSG013}"></span></font>
+			<p>検索条件を入力して下さい。
+			<table border="1">
+				<tr>
+					<td width="150" class="right">会員NO</td>
+					<th width="300" class="left"><input type="text"
+						th:field="*{memberNo}"></th>
+				</tr>
+				<tr>
+					<td width="150" class="right">会員名</td>
+					<th width="300" class="left"><input type="text"
+						th:field="*{memberName}"></th>
+				</tr>
+				<tr>
+					<td class="right">注文日(開始年月日)</td>
+					<th class="left"><span><select th:field="*{startYear}"><option
+									value=""></option>
+								<option th:each="seq : ${#numbers.sequence(2011,2020)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>年<select th:field="*{startMonth}"><option value=""></option>
+								<option th:each="seq : ${#numbers.sequence(1,12)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>月<select th:field="*{startDay}"><option value=""></option>
+								<option th:each="seq : ${#numbers.sequence(1,31)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>日</span></th>
+				</tr>
+				<tr>
+					<td class="right">注文日(終了年月日)</td>
+					<th class="left"><span><select th:field="*{endYear}"><option
+									value=""></option>
+								<option th:each="seq : ${#numbers.sequence(2011,2020)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>年<select th:field="*{endMonth}"><option value=""></option>
+								<option th:each="seq : ${#numbers.sequence(1,12)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>月<select th:field="*{endDay}"><option value=""></option>
+								<option th:each="seq : ${#numbers.sequence(1,31)}"
+									th:value="${seq}">[[${seq}]]</option>
+						</select>日</span></th>
+				</tr>
+				<tr>
+					<td class="right">合計金額上限</td>
+					<th class="left"><input type="text" th:field="*{priceMax}"></th>
+				</tr>
+				<tr>
+					<td class="right">合計金額下限</td>
+					<th class="left"><input type="text" th:field="*{priceMin}"></th>
+				</tr>
+			</table>
+			<p>
+			<div>
+				<span><input type="submit" value="検索"></span> <span>
+					<input type="submit" value="戻る" th:formaction="@{/MEN102.html}">
+				</span> <span> <input type="reset" value="クリア"></span>
+			</div>
+		</form>
+	</div>
+	<div>
+		<p>●購入履歴一覧
+	</div>
+	<div th:if="${logList != null && logList.size() > 0}">
+		<form th:action="@{/REC201.html}" method="post"
+			th:object="${deleteFormModel}">
+
+
+			<!-- ↓ページング表示、ココから↓  -->
+			<div>
+				<span th:if="${searchPage.first} == null">&lt;&lt;</span> <span
+					th:if="${searchPage.first} != null"> <a
+					th:href="@{/REC101.html?page=}+${searchPage.first}">&lt;&lt;</a>
+				</span> &nbsp;&nbsp; <span th:if="${searchPage.back} == null">&lt;</span> <span
+					th:if="${searchPage.back} != null"> <a
+					th:href="@{/REC101.html?page=}+${searchPage.back}">&lt;</a>
+				</span> &nbsp;&nbsp; <span th:text="${searchPage.currentPage}"></span> /<span
+					th:text="${searchPage.endPage}"></span> &nbsp;&nbsp; <span
+					th:if="${searchPage.next} == null">&gt;</span> <span
+					th:if="${searchPage.next} != null"> <a
+					th:href="@{/REC101.html?page=}+${searchPage.next}">&gt;</a>
+				</span> &nbsp;&nbsp; <span th:if="${searchPage.last} == null">&gt;&gt;</span>
+				<span th:if="${searchPage.last} != null"> <a
+					th:href="@{/REC101.html?page=}+${searchPage.last}">&gt;&gt;</a>
+				</span> &nbsp;&nbsp;
+			</div>
+			<!-- ↑ページング表示、ココまで↑  -->
+
+			<table border="1">
+				<thead>
+					<tr>
+						<th>注文取りまとめ番号</th>
+						<th>会員No</th>
+						<th>会員名</th>
+						<th>注文日</th>
+						<th>小計</th>
+						<th>消費税</th>
+						<th>合計</th>
+						<th>削除</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="log,st : ${logList}" th:object="${log}">
+						<td><a th:href="@{/REC102.html(id=*{orderNo})}"><label
+								th:text="*{collectNo}"></label></a></td>
+						<th th:text="*{memberNo}"></th>
+						<th th:text="*{memberName}"></th>
+						<th th:text="*{orderDate}"></th>
+						<td class="right">\<span th:if="${__*{money}__ gt 999}"
+							th:text="${#numbers.formatInteger(__*{money}__,3,'COMMA')}" /></span><span
+							th:if="${__*{money}__ le 999}" th:text="*{money}"></span>
+						<td class="right">\<span th:if="${__*{tax}__ gt 999}"
+							th:text="${#numbers.formatInteger(__*{tax}__,3,'COMMA')}" /></span><span
+							th:if="${__*{tax}__ le 999}" th:text="*{tax}"></span>
+						</td>
+						<td class="right">\<span
+							th:if="${(__*{money}__ + __*{tax}__) gt 999}"
+							th:text="${#numbers.formatInteger((__*{money}__ + __*{tax}__),3,'COMMA')}" /></span><span
+							th:if="${(__*{money}__ + __*{tax}__) le 999}"
+							th:text="(__*{money}__ + __*{tax}__)"></span>
+						</td>
+						<td>
+							<button type='submit' name="orderNo" th:value="*{orderNo}">削除</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

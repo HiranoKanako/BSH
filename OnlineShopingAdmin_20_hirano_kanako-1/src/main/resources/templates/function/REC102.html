@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>購入履歴詳細</title>
+</head>
+<Style>
+.center {
+	text-align: center;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div>
+		<form th:object="${detailLog}" th:action="@{/REC101.html}"
+			method="post">
+			<div>
+				<p>●会員情報
+				<table border="1">
+					<tr>
+						<th width="150" class="right">会員No</th>
+						<td width="300"><label th:text="*{memberNo}"></label></td>
+					</tr>
+					<tr>
+						<th class="right">氏名</th>
+						<td width="300"><label th:text="*{memberName}"></label></td>
+					</tr>
+					<tr>
+						<th class="right">電話番号</th>
+						<td width="300"><label th:text="*{tel}"></label></td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<p>●注文情報
+				<table border="1">
+					<tr>
+						<th width="150" class="right">注文取りまとめ番号</th>
+						<td width="250" class="center"><label th:text="*{collectNo}"></label></td>
+					</tr>
+					<tr>
+						<th class="right">注文日</th>
+						<td width="250" class="center"><label th:text="*{orderDate}"></label></td>
+					</tr>
+					<tr>
+						<th class="right">小計</th>
+						<td class="right">\<span th:if="${__*{money}__ gt 999}"
+							th:text="${#numbers.formatInteger(__*{money}__,3,'COMMA')}" /></span><span
+							th:if="${__*{money}__ le 999}" th:text="*{money}"></span>
+					</tr>
+					<tr>
+						<th class="right">消費税</th>
+						<td class="right">\<span th:if="${__*{tax}__ gt 999}"
+							th:text="${#numbers.formatInteger(__*{tax}__,3,'COMMA')}" /></span><span
+							th:if="${__*{tax}__ le 999}" th:text="*{tax}"></span>
+						</td>
+					</tr>
+					<tr>
+						<th class="right">合計</th>
+						<td class="right">\<span
+							th:if="${(__*{money}__ + __*{tax}__) gt 999}"
+							th:text="${#numbers.formatInteger((__*{money}__ + __*{tax}__),3,'COMMA')}" /></span><span
+							th:if="${(__*{money}__ + __*{tax}__) le 999}"
+							th:text="(__*{money}__ + __*{tax}__)"></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<p>●注文商品一覧
+				<table border="1">
+					<thead>
+						<tr>
+							<th>商品コード</th>
+							<th>商品名</th>
+							<th>販売元</th>
+							<th>価格</th>
+							<th>購入数</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="op : ${orderProductLog}" th:object="${op}">
+							<th th:text="*{productCode}"></th>
+							<th class="left" th:text="*{productName}"></th>
+							<th class="left" th:text="*{maker}"></th>
+							<td class="right">\<span th:if="${__*{price}__ gt 999}"
+								th:text="${#numbers.formatInteger(__*{price}__,3,'COMMA')}" /></span><span
+								th:if="${__*{price}__ le 999}" th:text="*{price}"></span>
+							<th th:text="*{buyCount}"></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				<input type="submit" value="戻る">
+		</form>
+	</div>
+</body>
+</html>

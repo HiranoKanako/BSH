@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>購入履歴削除結果</title>
+</head>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div align="center" th:object="${member}">
+		<p th:text="#{content.MSG014}"></p>
+		<form th:action="@{/research}" method="post">
+			<p>
+				<span> <input type="submit" value="検索結果へ戻る"></span>
+		</form>
+		<form th:action="@{/MEN102.html}" method="get">
+			<p>
+				<span> <input type="submit" value="メニューへ"></span>
+		</form>
+	</div>
+</body>
+</html>

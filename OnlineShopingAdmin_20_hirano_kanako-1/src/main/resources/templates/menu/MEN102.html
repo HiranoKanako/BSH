@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>管理者メニュー</title>
+</head>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div align="center">
+		<p>★ 管理者用 ★</p>
+		日付: <span
+			th:text="${#dates.format(#dates.createNow(), 'yyyy/MM/dd HH:mm')}"></span>
+		ログイン者名: <span th:if="${session['loginUser']} != null">「<span
+			th:text="${session['loginUser'].name}"></span>」さん
+		</span>
+	</div>
+	<div align="center">
+		<p>
+			<span><a th:href="@{'/searchForm'}" href="searchForm">購入履歴</a>
+			</span> <label>購入履歴の参照、削除を行います。</label>
+		<div>
+			<form th:action="@{/logout}" method="post">
+				<p>
+					<input type="submit" value="ログアウト">
+			</form>
+		</div>
+	</div>
+</body>
+</html>
