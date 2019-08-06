@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>会員情報修正結果</title>
+</head>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div align="center">
+		<p th:text="#{content.MSG003}"></p>
+		<form th:action="@{/MEN101.html}" method="get">
+			<p>
+				<span> <input type="submit" value="メニューへ"></span>
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>商品登録結果</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div th:if="${productBean != null && productBean.size() > 0}">
+	<p>以下の商品をお買い物かごに登録しました。
+		<p>●商品一覧
+		<form th:action="@{/KGO101.html}" method="post">
+			<table border="1">
+				<thead>
+					<tr>
+						<th class="center">商品コード</th>
+						<th class="center">商品名</th>
+						<th class="center">販売元</th>
+						<th class="center">価格</th>
+						<th class="center">購入数</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="p : ${productBean}" th:object="${p}">
+						<td class="center" th:text="*{productCode}"></td>
+						<td><label th:text="*{productName}"></label></td>
+						<td th:text="*{maker}" /></td>
+						<td class="right">\<span
+							th:text="${#numbers.formatInteger(p.price,3,'COMMA')}" /></span></td>
+						<td class="center" th:text="*{buyCount}">></td>
+					</tr>
+				</tbody>
+			</table>
+			<div align="left">
+				<p>
+					<span><input type="submit" value="お買いものかご"></span> <span>
+						<input type="submit" value="戻る" th:formaction="@{/SHO101.html}">
+					</span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

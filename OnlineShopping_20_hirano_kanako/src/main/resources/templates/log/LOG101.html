@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ユーザログイン</title>
+</head>
+<Style>
+.form_conf {
+	text-align: center;
+}
+
+.form_conf form {
+	display: inline-block;
+	margin: 0 10px;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+
+	<div align="center">
+		<p>
+			<a th:href="@{'/MEM101.html'}" href="MEM101.html">新規会員の方はこちら</a>
+	</div>
+
+	<div align="center">
+		<div>
+			<form th:action="@{/MEM101.html}" method="post"
+				th:object="${loginFormModel}">
+				<p>
+					会員NO <input type="text" name="memberNo"/>
+				<p>
+					パスワード <input type="password" th:field="*{pass}" />
+				<div class="form_conf">
+					<span> <input type="submit" value="ログイン" name="login"></span>
+					<span> <input type="reset" value="クリア"></span>
+				</div>
+
+				<p>
+					<font color="red"><span
+						th:if="${#fields.hasErrors('memberNo')}" th:errors="*{memberNo}"
+						class="error"></span></font>
+				<p>
+					<font color="red"><span th:if="${#fields.hasErrors('pass')}"
+						th:errors="*{pass}" class="error"></span></font>
+				<div th:if="${error} != null">
+					<font color="red"><span th:text="${error}"></span></font>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

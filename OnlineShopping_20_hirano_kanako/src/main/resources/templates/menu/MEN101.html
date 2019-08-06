@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ユーザメニュー</title>
+</head>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+
+	<div align="center">
+		<span th:if="${session['loginUser']} == null"><span><a
+				th:href="@{'/MEM101.html'}" href="MEM101.html">新規会員登録</a> </span> <label>会員情報の登録を行います。</label></span>
+		<p>
+			<span><a th:href="@{'/MEM201.html'}" href="MEM201.html">会員情報変更・削除</a>
+			</span> <label>会員情報の変更、削除を行います。</label>
+		<p>
+			<span><a th:href="@{'/searchForm.html'}">商品検索</a>
+			</span> <label>購入する商品の検索を行います。</label>
+		<p>
+			<span><a th:href="@{'/KGO101.html'}" href="KGO101.html">お買い物かご</a>
+			</span> <label>商品の注文を行います。</label>
+		<div th:if="${session['loginUser']} == null">
+			<form th:action="@{/LOG101.html}" method="get">
+				<p>
+					<input type="submit" value="ログイン">
+			</form>
+		</div>
+		<div th:if="${session['loginUser']} != null">
+			<form th:action="@{/logout}" method="post">
+				<p>
+					<input type="submit" value="ログアウト">
+			</form>
+		</div>
+	</div>
+</body>
+</html>

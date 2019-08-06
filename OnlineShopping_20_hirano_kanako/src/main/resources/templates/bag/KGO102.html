@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>お買い物確認</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div th:if="${session['productBean']} != null">
+		<div th:if="${noProduct} != null">
+			<p th:each="product : ${noProduct}" th:object="${product}">
+				<font color="red"><label
+					th:text="#{content.MSG010(*{productCode})}"></label></font>
+			</p>
+		</div>
+		<div th:if="${noExistProduct} != null">
+			<p th:each="product : ${noExistProduct}" th:object="${product}">
+				<font color="red"><label
+					th:text="#{content.MSG010(${product})}"></label></font>
+			</p>
+		</div>
+		<form th:action="@{/KGO103.html}" method="post">
+			<p>●商品一覧
+			<table border="1">
+				<thead>
+					<tr>
+						<th class="center">商品コード</th>
+						<th class="center">商品名</th>
+						<th class="center">販売元</th>
+						<th class="center">価格</th>
+						<th class="center">購入数</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="pb : ${session['productBean']}" th:object="${pb}">
+						<td class="center" th:text="*{productCode}"></td>
+						<td><label th:text="*{productName}"></label></td>
+						<td th:text="*{maker}" /></td>
+						<td class="right">\<span
+							th:text="${#numbers.formatInteger(pb.price,1,'COMMA')}" /></span></td>
+						<td class="center" th:text="*{buyCount}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div th:if="${session['fee']} != null">
+		<form th:action="@{/KGO103.html}" method="post"
+			th:object="${session['fee']}">
+			<p>●料金
+			<table border="1">
+				<tr>
+					<th class="center">小計</th>
+					<td class="right">\<span
+						th:text="${#numbers.formatInteger(__*{subTotal}__,1,'COMMA')}" /></span></td>
+				</tr>
+				<tr>
+					<th class="center">消費税</th>
+					<td class="right">\<span th:if="${tax gt 999}"
+						th:text="${#numbers.formatInteger(tax,3,'COMMA')}" /></span><span
+						th:if="${tax le 999}" th:text="*{tax}"></span>
+					</td>
+				</tr>
+				<tr>
+					<th class="center">合計金額</th>
+					<td class="right">\<span
+						th:text="${#numbers.formatInteger(__*{total}__,1,'COMMA')}" /></span></td>
+				</tr>
+			</table>
+			<div align="left">
+				<p>
+					<span> <input type="submit" value="買い物をやめる" name="drop"
+						th:formaction="@{/MEN101.html}">
+					</span> <span> <input type="submit" value="注文する">
+					</span> <span> <input type="submit" value="戻る"
+						th:formaction="@{/KGO101.html}">
+					</span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

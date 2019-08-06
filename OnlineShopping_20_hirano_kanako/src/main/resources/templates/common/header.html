@@ -1,0 +1,15 @@
+<meta charset="UTF-8">
+<div xmlns:th="http://www.thymeleaf.org">
+	<div id="header" th:fragment="navigation">
+		<label>オンラインショッピングサイト</label>
+		<div align="right">
+			<span
+				th:text="${#dates.format(#dates.createNow(), 'yyyy/MM/dd HH:mm')}"></span>
+			<span th:if="${session['loginUser']} == null">「ゲストさん」</span>
+			<span th:if="${session['loginUser']} != null">「<span
+				th:text="${session['loginUser'].name}"></span>」さん
+			</span>
+		</div>
+		<hr>
+	</div>
+</div>

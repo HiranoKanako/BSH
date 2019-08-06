@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>会員情報削除確認</title>
+</head>
+<Style>
+.right {
+	text-align: right;
+}
+
+.left {
+	text-align: left;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div>
+		<br> <br>
+		<p>この情報を削除しますか?
+		<p>●会員情報
+		<form th:action="@{/MEM302.html}" method="post"
+			th:object="${memberInfo}">
+			<table border="1">
+				<tr>
+					<td width="150" class="right">会員NO</td>
+					<td width="300" class="left"><label th:text="*{no}"></label></td>
+				</tr>
+				<tr>
+					<td width="150" class="right">氏名</td>
+					<td width="300" class="left"><label th:text="*{name}"></label></td>
+				</tr>
+				<tr>
+					<td class="right">年齢</td>
+					<td class="left"><label th:text="*{age}"></label></td>
+				</tr>
+				<tr>
+					<td class="right">性別</td>
+					<td class="left"><label
+						th:text="*{gender == 'M'}? '男性' : '女性'"></label></td>
+				</tr>
+				<tr>
+					<td class="right">郵便番号</td>
+					<td class="left"><label th:text="*{postal}"></label></td>
+				</tr>
+				<tr>
+					<td class="right">住所</td>
+					<td class="left"><pre th:text="*{address}"></pre></td>
+				</tr>
+				<tr>
+					<td class="right">電話番号</td>
+					<td class="left"><label th:text="*{phone}"></label></td>
+				</tr>
+				<tr>
+					<td class="right">登録日</td>
+					<td class="left"><label th:text="*{registDate}"></label></td>
+				</tr>
+			</table>
+			<p>
+			<div>
+				<span><input type="submit" value="実行"></span> <span>
+					<input type="submit" value="戻る" th:formaction="@{/MEM201.html}">
+				</span>
+			</div>
+		</form>
+		<div></div>
+	</div>
+</body>
+</html>

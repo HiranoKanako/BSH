@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>会員情報確認</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<div th:if="${error} != null">
+		<font color="red"><span th:text="${error}"></span></font>
+	</div>
+	<div>
+		<p>この内容で登録しますか?
+		<p>●会員情報
+		<form th:action="@{/MEM103.html}" method="post"
+			th:object="${memberFormModel}">
+			<table border="1">
+				<tr>
+					<td width="150">氏名</td>
+					<td width="300"><div th:text="*{name}"></div> <input
+						type="hidden" th:field="*{name}"></td>
+				</tr>
+				<tr>
+					<td>年齢</td>
+					<td><div th:text="*{age}"></div> <input type="hidden"
+						th:field="*{age}"></td>
+				</tr>
+				<tr>
+					<td>性別</td>
+					<td><div th:text="*{gender == 'M'}? '男性' : '女性'"></div> <input
+						type="hidden" th:field="*{gender}"></td>
+				</tr>
+				<tr>
+					<td>郵便番号</td>
+					<td><div th:text="*{postal}"></div> <input type="hidden"
+						th:field="*{postal}"></td>
+				</tr>
+				<tr>
+					<td height="80">住所</td>
+					<td><pre th:text="*{address}"></pre> <input type="hidden"
+						th:field="*{address}"></td>
+				</tr>
+				<tr>
+					<td>電話番号</td>
+					<td><div th:text="*{phone}"></div> <input type="hidden"
+						th:field="*{phone}"></td>
+				</tr>
+			</table>
+			<div align="left">
+				<p>
+					<span><input type="submit" value="登録"></span>
+					<span> <input type="submit" value="戻る" th:formaction="@{/MEM101.html}"></span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

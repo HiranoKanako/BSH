@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>商品詳細</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+	<p th:if="${MSG007} != null">
+		<font color="red"><span th:text="${MSG007}"></span></font>
+	<p th:if="${MSG008} != null">
+		<font color="red"><span th:text="${MSG008}"></span></font>
+	<div>
+		<p>●商品詳細
+		<form th:action="@{/KGO101.html}" method="post"
+			th:object="${detailFormModel}">
+			<table border="1">
+				<tr>
+					<th width="150">商品名</th>
+					<td width="300"><label th:text="${detailProduct.productName}"
+						th:value="${detailProduct.productName}"></label></td>
+				</tr>
+				<tr>
+					<th>画像</th>
+					<td><img th:src="@{__${detailProduct.pictureName}__}"></td>
+				</tr>
+				<tr>
+					<th>商品説明</th>
+					<td><label th:text="${detailProduct.memo}"
+						th:value="${detailProduct.memo}"></label></td>
+				</tr>
+				<tr>
+					<th>価格</th>
+					<td class="right">\<span
+						th:text="${#numbers.formatInteger(detailProduct.price,3,'COMMA')}" /></span></td>
+				</tr>
+				<tr>
+					<th>購入数</th>
+					<td class="right"><span><input type="text"
+							th:name="count" th:value="*{count}" /> </span>個<input type="hidden"
+						th:name="productCode" th:value="${detailProduct.productCode}"></td>
+				</tr>
+			</table>
+			<div align="left">
+				<p>
+					<span><input type="submit" value="お買いものかごにいれる" name="detail"></span>
+					<span> <input type="submit" value="戻る"
+						th:formaction="@{/SHO101.html}">
+					</span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

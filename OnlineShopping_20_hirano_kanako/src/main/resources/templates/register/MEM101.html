@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>会員情報入力</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+
+	<div>
+		<form th:action="@{/MEM102.html}" method="post"
+			th:object="${memberFormModel}">
+			<br>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}" class="error"></span></font>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('pass')}"
+					th:errors="*{pass}" class="error"></span></font>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('passConf')}"
+					th:errors="*{passConf}" class="error"></span></font>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('passEqual')}"
+					th:errors="*{passEqual}" class="error"></span></font>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('age')}"
+					th:errors="*{age}" class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('postal')}" th:errors="*{postal}"
+					class="error"></span></font>
+			<p>
+				<font color="red"><span
+					th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+					class="error"></span></font>
+			<p>
+				<font color="red"><span th:if="${#fields.hasErrors('phone')}"
+					th:errors="*{phone}" class="error"></span></font> <br>
+			<p>会員情報を入力して下さい。
+			<p>●会員情報
+			<table border="1">
+				<tr>
+					<td width="150" class="right">氏名</td>
+					<th width="300" class="left"><input type="text"
+						th:field="*{name}"></th>
+				</tr>
+				<tr>
+					<td width="150" class="right">パスワード</td>
+					<th width="300" class="left"><input type="password"
+						th:field="*{pass}"></th>
+				</tr>
+				<tr>
+					<td width="150" class="right">パスワード<br>(確認用)
+					</td>
+					<th width="300" class="left"><input type="password"
+						th:field="*{passConf}"></th>
+				</tr>
+				<tr>
+					<td class="right">年齢</td>
+					<th class="left"><input type="text" size="1" th:field="*{age}"></th>
+				</tr>
+				<tr>
+					<td class="right">性別</td>
+					<th class="left"><select th:field="*{gender}">
+							<option th:value="M">男性</option>
+							<option th:value="F">女性</option>
+					</select></th>
+				</tr>
+				<tr>
+					<td class="right">郵便番号</td>
+					<th class="left"><input type="text" size="10"
+						th:field="*{postal}"></th>
+				</tr>
+				<tr>
+					<td class="right">住所</td>
+					<th class="left"><textarea rows="5" cols="30"
+							th:field="*{address}"></textarea></th>
+				</tr>
+				<tr>
+					<td class="right">電話番号</td>
+					<th class="left"><input type="text" size="15"
+						th:field="*{phone}"></th>
+				</tr>
+			</table>
+			<p>
+			<div>
+				<span><input type="submit" value="確認" name="conf"></span> <span>
+					<input type="submit" value="戻る" th:formaction="@{/MEN101.html}">
+				</span> <span> <input type="reset" value="クリア"></span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

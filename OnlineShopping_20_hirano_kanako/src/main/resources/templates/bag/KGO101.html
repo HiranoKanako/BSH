@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>お買い物かご</title>
+</head>
+<Style>
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
+</Style>
+<body>
+	<!-- ヘッダー差し込み -->
+	<div th:include="common/header :: navigation"></div>
+
+	<form th:action="@{/KGO102.html}" method="post"
+		th:object="${selectProductFormModel}">
+		<div th:if="${session['productBean']} != null">
+			<p th:if="${MSG009} != null">
+				<font color="red"><span th:text="${MSG009}"></span></font>
+			<p th:if="${MSG007} != null">
+				<font color="red"><span th:text="${MSG007}"></span></font>
+			<p th:if="${MSG008} != null">
+				<font color="red"><span th:text="${MSG008}"></span></font>
+			<p>●商品一覧
+			<table border="1">
+				<thead>
+					<tr>
+						<th class="center">選択</th>
+						<th class="center">商品コード</th>
+						<th class="center">商品名</th>
+						<th class="center">販売元</th>
+						<th class="center">価格</th>
+						<th class="center">購入数</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="pb,st : ${session['productBean']}" th:object="${pb}">
+						<td><input type="checkbox" th:field="${selectProductFormModel.productsSelect[__${st.index}__]}"
+							th:value="*{productCode}" /> <input type="hidden"
+							name="productCode" th:value="*{productCode}" /></td>
+						<td class="center" th:text="*{productCode}"></td>
+						<td><label th:text="*{productName}"></label></td>
+						<td th:text="*{maker}" /></td>
+						<td class="right">\<span
+							th:text="${#numbers.formatInteger(pb.price,1,'COMMA')}" /></span></td>
+						<td class="center"><input type="text" name="productsCnt"
+							th:value="*{buyCount}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div align="left">
+			<p>
+				<span th:if="${session['productBean']} != null"><input
+					type="submit" value="取り消し" name="delete"
+					th:formaction="@{/KGO101.html}"></span> <span
+					th:if="${session['productBean']} != null"> <input
+					type="submit" value="買い物をやめる" name="drop"
+					th:formaction="@{/MEN101.html}">
+				</span> <span th:if="${session['productBean']} != null"> <input
+					type="submit" value="注文する">
+				</span> <span> <input type="submit" value="メニューへ"
+					th:formaction="@{/MEN101.html}">
+				</span>
+		</div>
+	</form>
+
+</body>
+</html>
