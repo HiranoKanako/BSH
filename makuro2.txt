@@ -1,0 +1,31 @@
+Option Explicit
+
+Public Const TESTCASE = 8
+
+Public Const DOTEST = 39
+
+Public Const NGTEST = 41
+
+Public Const COMPTEST = 44
+
+
+Option Explicit
+
+Public Sub aaa()
+
+   Dim s As Worksheet
+    
+   For Each s In ThisWorkbook.Worksheets
+   
+    Debug.Print getSheet(s).Value
+   
+   Next
+
+
+End Sub
+
+Private Function getSheet(sheet As Worksheet)
+    Debug.Print sheet.Name
+    Set getSheet = sheet.Cells(1, 1)
+End Function
+
