@@ -1,0 +1,257 @@
+
+Sub button1_Click()
+
+ Dim target As String
+    Dim date1 As Date
+    Dim date2 As Date
+
+    Dim targetBook As Workbook
+    
+    Dim dateNumber As Integer
+    Dim j As Integer
+    Dim k As Integer
+    Dim s As Integer
+    Dim l As Integer
+    Dim check As String
+    Dim count1 As Integer
+    Dim count2 As Integer
+    Dim NGcount As Integer
+    Dim DOcount As Integer
+    Dim fcount1 As Integer
+    Dim fcount2 As Integer
+    Dim fNGcount As Integer
+    Dim fDOcount As Integer
+    Dim sheetCount As Integer
+    Dim number As String
+        
+    Dim scheduleCount As Integer
+    Dim endCount As Integer
+    Dim ucName As String
+    Dim temp As Variant
+    
+    Application.ScreenUpdating = False
+    
+    Set lBook = ActiveWorkbook
+    Set lSht = lBook.Sheets("進捗集計")
+    
+    ' 検索対象のディレクトリを取得
+    target = lSht.Cells(6, 5).Value
+    ' ディレクトリが未記入の場合、エラー
+    If target = "" Then
+        MsgBox "ディレクトリが指定されていません。"
+        Exit Sub
+    End If
+    
+    ' 指定されたディレクトリが存在するか確認
+    Set fso = New FileSystemObject
+    If fso.FolderExists(target) <> True Then
+        MsgBox "指定されたディレクトリが存在しません。"
+        Exit Sub
+    End If
+    
+    ' 対象の日付を取得
+    date1 = lSht.Cells(7, 5).Value
+    ' 対象の日付が未記入の場合、エラー
+    If date1 = date2 Then
+        MsgBox "進捗作成日が指定されていません。"
+        Exit Sub
+    End If
+    
+    ' 対象の日付が、単体テスト進捗表シートにあるか検索
+    Set lSht = lBook.Sheets("単体テスト進捗表")
+    dateNumber = 4
+    Do While j = 0
+        If lSht.Cells(dateNumber, 2).Value = "" Then
+            j = -1
+        ElseIf lSht.Cells(dateNumber, 2).Value = date1 Then
+            j = dateNumber
+        End If
+        dateNumber = dateNumber + 1
+    Loop
+    
+    If j = -1 Then
+        MsgBox "単体テスト進捗表シートに、指定された進捗作成日が存在しません。"
+        Exit Sub
+    End If
+    
+    ' ファイルを検索
+    Set found_files = FileSearch2007(target, UCase("xlsx"))
+    
+    ' 見つかったファイルに対して処理を行う
+    found_num = found_files.count
+    'Set lSht = lBook.Sheets("単体テスト進捗詳細")
+    Set SSht = lBook.Sheets("ファイル別進捗")
+    
+    
+    If found_num = 0 Then
+        MsgBox "ファイルが見つかりません"
+        Exit Sub
+    Else
+        k = 4
+        s = 4
+        For i = 1 To found_num
+        fcount1 = 0
+        fcount2 = 0
+        fNGcount = 0
+        fDOcount = 0
+        sheetCount = 0
+            ' シートを読み取り専用で開く
+            bookpath = found_files(i)
+            ' ディレクトリ名（ユースケース名取得）
+            temp = Split(bookpath, "\")
+            ucName = temp(UBound(temp) - 1)
+            
+            Workbooks.Open Filename:=bookpath, ReadOnly:=True
+            Set targetBook = ActiveWorkbook
+            fname = targetBook.Name
+            For Each tSht In Worksheets
+            sheetCount = sheetCount + 1
+                With tSht
+                    .Activate
+                    
+                    ' テスト仕様書のシートのみ、集計対象とする
+                    If (.Name <> "表紙") And (.Name <> "") And tSht.Cells(2, 6).Value = "案件名" Then
+                        
+                        j = 7
+                        count1 = 0
+                        count2 = 0
+                        NGcount = 0
+                        DOcount = 0
+                        l = 1
+                        
+                        ' 確認セルを検索（消化済み項目をカウントするため）
+                        Do
+                            check = tSht.Cells(l, 2).Value
+                            l = l + 1
+                        Loop While check <> "確認"
+                        
+                        ' アクティブシートの、全テストケース件数と、消化件数をカウント
+                        number = tSht.Cells(8, j).Value
+                        If number <> "" Then
+                            Do
+                                ' 総件数
+                                number = tSht.Cells(TESTCASE, j).Value
+                                If number <> "" Then
+                                    count1 = count1 + 1
+                                End If
+                                ' 実施件数
+                                 If UCase(tSht.Cells(DOTEST, j).Value) <> "" Then
+                                    DOcount = DOcount + 1
+                                End If
+                                ' 障害件数
+                                If UCase(tSht.Cells(NGTEST, j).Value) <> "" Then
+                                    NGcount = NGcount + 1
+                                End If
+                                ' 完了件数
+                                If UCase(tSht.Cells(COMPTEST, j).Value) <> "" Then
+                                    count2 = count2 + 1
+                                End If
+                                    j = j + 1
+                            Loop While number <> ""
+                        End If
+                    
+                        ' 単体テスト進捗詳細シートに書きだし
+                        'lSht.Cells(k, 2).Value = k - 3
+                        'lSht.Cells(k, 3).Value = ucName
+                        'lSht.Cells(k, 4).Value = ActiveWorkbook.Name
+                        'lSht.Cells(k, 5).Value = .Name
+                        'lSht.Cells(k, 6).Value = count1
+                        'lSht.Cells(k, 7).Value = NGcount
+                        scheduleCount = scheduleCount + count1
+                        endCount = endCount + count2
+                        fcount1 = fcount1 + count1
+                        fcount2 = fcount2 + count2
+                        fNGcount = fNGcount + NGcount
+                        fDOcount = fDOcount + DOcount
+                        
+                        k = k + 1
+                    End If
+                End With
+                If Worksheets.count = sheetCount Then
+                
+                ' ファイル別捗シートに書きだし
+                SSht.Cells(s, 2).Value = s - 3
+                SSht.Cells(s, 3).Value = ucName
+                SSht.Cells(s, 4).Value = fname
+                SSht.Cells(s, 5).Value = fcount1
+                SSht.Cells(s, 7).Value = fDOcount
+                SSht.Cells(s, 8).Value = fNGcount
+                SSht.Cells(s, 9).Value = fcount2
+                s = s + 1
+                End If
+            Next
+            ' シートを閉じる（保存確認抑制）
+            Application.DisplayAlerts = False
+            targetBook.Close
+            Application.DisplayAlerts = True
+         
+        Next i
+    End If
+    
+    ' 以前の集計時よりもテストシートが減った場合の対応。
+    'lSht.Range(lSht.Cells(k, 2), lSht.Cells(k, 2).SpecialCells(xlLastCell)).ClearContents
+    SSht.Range(SSht.Cells(s, 2), SSht.Cells(s, 2).SpecialCells(xlLastCell)).ClearContents
+    
+    Set lSht = lBook.Sheets("単体テスト進捗表")
+    
+    Dim notEndCount As Integer
+    Dim percent As Double
+    ' 進捗率を計算
+    notEndCount = scheduleCount - endCount
+    percent = Round(endCount / scheduleCount, 3) * 100
+    lSht.Cells(dateNumber - 1, 4).Value = scheduleCount
+    lSht.Cells(dateNumber - 1, 5).Value = endCount
+    lSht.Cells(dateNumber - 1, 6).Value = notEndCount
+    lSht.Cells(dateNumber - 1, 7).Value = percent
+
+    MsgBox "進捗集計が終了しました。"
+End Sub
+
+' Application.FileSearchの2007版。
+' フォルダを再帰検索し，マッチしたファイルのパスをコレクションで返す。
+'
+' ※利用時にはVBEでツール＞参照設定＞Microsoft Scripting Runtime にチェックすること。
+' http://blog.livedoor.jp/excelvbamemo/archives/53397448.html
+Function FileSearch2007(dir_path, target_extention)
+
+    ' 再帰探索を開始
+    Set found_files = New Collection
+    Call FileSearch2007_Repeat(dir_path, found_files, target_extention)
+        ' 参照渡し http://www.k1simplify.com/vba/tipsleaf/leaf340.html
+    
+    ' 返り値
+    Set FileSearch2007 = found_files
+
+End Function
+
+
+' フォルダの再帰で呼び出される関数
+Private Sub FileSearch2007_Repeat(dir_path, found_files, target_extention)
+    
+    Set fso = New FileSystemObject
+    Set target_folder = fso.GetFolder(dir_path)
+        
+    ' サブフォルダに再帰
+    For Each sub_folder In target_folder.SubFolders
+        Call FileSearch2007_Repeat(sub_folder.Path, found_files, target_extention)
+    Next sub_folder
+    
+    ' ファイル
+    For Each objFile In target_folder.Files
+        With objFile
+            ' 検索条件にマッチするか
+            If ((UCase(fso.GetExtensionName(.Path))) = target_extention) And Left(fso.GetFileName(.Path), 2) <> "~$" And InStr(1, fso.GetFileName(.Path), "単体テスト仕様書") <> 0 Then
+                
+                ' 登録
+                found_files.Add Item:=.Path
+                    ' コレクション http://www.moug.net/tech/exvba/0150076.htm
+            
+            End If
+        
+        End With
+    Next objFile
+    
+    ' このフォルダと子フォルダの処理が終了
+    Set fso = Nothing
+
+End Sub
